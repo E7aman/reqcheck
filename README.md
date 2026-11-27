@@ -1,36 +1,39 @@
 # ReqCheck
 
-**AI-powered requirements validation for software specifications.** ReqCheck combines deterministic rule-based checks with AI analysis to identify defects in requirements and produce structured, evidence-based review reports.
+**AI-powered requirements validation for software specifications.**
 
+ReqCheck is a requirements analysis tool that combines deterministic rule-based validation with AI-assisted review to identify defects in software specifications and generate structured, evidence-based reports.
 
 ## Overview
 
-ReqCheck reviews software requirements before development starts. It helps identify ambiguous, incomplete, inconsistent, or difficult-to-verify requirements and grounds findings in quotations from the source document.
+ReqCheck helps teams review software requirements before development begins. It identifies potentially ambiguous, incomplete, inconsistent, and difficult-to-verify requirements while grounding findings in quotations and locations from the source document.
 
-Built for the **BCC-HUB × MNU FinTech Hackathon** task on AI agents for analyzing technical specifications in fintech.
+The project was developed for the **BCC-HUB × MNU FinTech Hackathon**, addressing the challenge of applying AI agents to technical specification analysis in fintech.
 
-## Features
+## Key Features
 
-- Rule-based validation that works without an API key or network connection
-- AI-assisted analysis powered by Google Gemini
-- Requirements segmentation and individual requirement review
-- Contradiction, gap, and cross-reference analysis
-- Acceptance-criteria coverage assessment
-- Findings grounded in source quotations and document locations
-- Markdown reports and optional JSON output
-- Response caching, retries, and model fallback configuration
-- Partial reports when AI service limits prevent a complete analysis
+- **Hybrid analysis:** combines deterministic validation rules with AI-assisted reasoning.
+- **Offline rule-based mode:** performs structural and pattern-based checks without an API key or network connection.
+- **Requirements extraction:** segments specifications into individually identifiable requirements.
+- **Quality assessment:** analyzes clarity, completeness, consistency, and verifiability.
+- **Cross-requirement analysis:** identifies potential contradictions, gaps, and cross-reference issues.
+- **Acceptance criteria coverage:** evaluates whether requirements are supported by acceptance criteria.
+- **Evidence-based findings:** validates source quotations and document locations before including findings.
+- **Structured reporting:** generates Markdown reports and optional JSON output.
+- **Resilience mechanisms:** supports response caching, retries, model fallback configuration, and partial reports when AI services are unavailable.
 
 ## Analysis Workflow
 
-1. Parse and normalize the input document
-2. Run deterministic checks
-3. Segment requirements with AI
-4. Analyze individual requirements
-5. Check contradictions, gaps, and cross-references
-6. Assess acceptance-criteria coverage
-7. Verify AI findings against source evidence
-8. Generate a review report
+ReqCheck follows a multi-stage analysis pipeline:
+
+1. **Document parsing** — loads and normalizes the input specification.
+2. **Deterministic validation** — checks document structure and applies rule-based quality checks.
+3. **Requirements segmentation** — extracts individual requirements using AI.
+4. **Individual analysis** — evaluates the quality of each extracted requirement.
+5. **Document-level analysis** — checks contradictions, gaps, and cross-references.
+6. **Coverage assessment** — evaluates acceptance criteria coverage.
+7. **Evidence verification** — checks AI-generated findings against the original document and filters unsupported results.
+8. **Report generation** — produces a structured review report.
 
 ## Supported Input Formats
 
@@ -41,35 +44,34 @@ Built for the **BCC-HUB × MNU FinTech Hackathon** task on AI agents for analyzi
 | PDF (`.pdf`) | Text-layer PDFs; scanned PDFs without a text layer are not OCR-processed |
 | Word (`.docx`) | Paragraphs, headings, and tables |
 
-
 ## Requirements
 
 - Python 3.10 or newer
-- For AI analysis: a Gemini API key and internet access
-- For rule-based mode and tests: no API key or internet required
+- For AI-assisted analysis: a Google Gemini API key and internet access
+- For rule-based analysis and automated tests: no API key or internet connection required
 
 ## Installation
 
-Clone the repository and enter its directory:
+Clone the repository:
 
 ```bash
 git clone https://github.com/E7aman/reqcheck.git
 cd reqcheck
 ```
 
-Install dependencies:
+Create and activate a virtual environment:
 
 ```bash
 python -m venv .venv
 ```
 
-Activate the environment (Windows PowerShell):
+Windows PowerShell:
 
 ```powershell
 .venv\Scripts\Activate.ps1
 ```
 
-Install packages:
+Install dependencies:
 
 ```bash
 pip install -r requirements.txt
@@ -77,20 +79,24 @@ pip install -r requirements.txt
 
 ## Configuration
 
-Create a `.env` file in the repository root and set your Gemini API key:
-
+Create a `.env` file in the repository root:
 
 ```env
 GEMINI_API_KEY=your_api_key_here
 ```
 
-`GOOGLE_API_KEY` is also accepted. Optional settings include `GEMINI_MODEL` (a model name or comma-separated fallback list) and `LLM_MIN_INTERVAL` (minimum delay between requests). Do not commit your `.env` file or API keys.
+`GOOGLE_API_KEY` is also accepted.
 
+Optional configuration:
+
+- `GEMINI_MODEL` — model name or comma-separated fallback model list.
+- `LLM_MIN_INTERVAL` — minimum delay between consecutive LLM requests.
+
+Keep API keys private. Never commit `.env` files or credentials to the repository.
 
 ## Usage
 
-Run commands from the repository root.
-
+Run all commands from the repository root.
 
 ### AI-assisted analysis
 
@@ -98,46 +104,73 @@ Run commands from the repository root.
 python -m validator tests/fixtures/requirements.md out/report.md --json out/result.json
 ```
 
-### Rule-based mode (no API key required)
+This command runs the complete analysis pipeline and generates:
+
+- `out/report.md` — human-readable Markdown report.
+- `out/result.json` — structured JSON results.
+
+### Rule-based analysis
 
 ```bash
 python -m validator tests/fixtures/requirements.md out/report.md --lint-only
 ```
 
-### Help
+This mode runs deterministic checks without requiring an API key or network access.
+
+### Command-line help
 
 ```bash
 python -m validator --help
 ```
 
-You can also provide your own `.pdf`, `.docx`, `.txt`, or Markdown specification as the input file.
+You can replace the example input with your own `.md`, `.markdown`, `.txt`, `.pdf`, or `.docx` specification.
 
 ## Reports
 
-ReqCheck produces a Markdown report. JSON output can optionally be generated with `--json`.
-Reports include requirement segmentation, quality findings, document-level observations, acceptance coverage, a summary, and prioritized recommendations. AI findings include source quotes and locations when available.
+ReqCheck generates structured reports containing:
 
+- Extracted requirements and identifiers.
+- Individual requirement quality assessments.
+- Document-level observations.
+- Potential contradictions and missing information.
+- Acceptance criteria coverage.
+- Prioritized findings and recommendations.
+
+AI-generated findings are checked against source evidence. Unsupported quotations and findings may be discarded during verification.
+
+JSON output is available through the optional `--json` argument.
 
 ## Testing
 
-Run the test suite from the repository root:
-
+Run the automated test suite from the repository root:
 
 ```bash
-python -m unittest discover -v
+python -m unittest discover -s tests -t . -v
 ```
+
+The test suite covers:
+
+- Command-line behavior and error handling.
+- Document loading and parsing.
+- Deterministic validation rules.
+- AI response handling and fallback behavior.
+- Analysis pipeline stages.
+- Evidence verification.
+- Error recovery and robustness.
 
 ## Limitations
 
-- AI findings may be incorrect or incomplete and should be reviewed by a human.
-- Analysis quality and availability depend on the configured model and API service.
-- Scanned PDFs without an extractable text layer are not supported (OCR is not included).
-- Rule-based checks are pattern-based and cannot identify every requirements defect.
+- AI-generated findings may be incorrect or incomplete and require human review.
+- Analysis quality and availability depend on the configured model and external API service.
+- API quotas, rate limits, and service outages may affect AI-assisted analysis.
+- Scanned PDFs without an extractable text layer are not supported because OCR is not included.
+- Rule-based validation relies on predefined patterns and cannot detect every requirements defect.
+- A successful analysis does not guarantee that a specification is complete or implementation-ready.
 
 ## Documentation
 
-- [Russian runbook](RUNBOOK.md): setup, quota limits, testing, evaluation, troubleshooting
+- [Russian Runbook](RUNBOOK.md) — setup, configuration, quota limits, testing, evaluation, and troubleshooting.
 
 ## Disclaimer
 
-ReqCheck is an automated review assistant. Its output is advisory and should not replace human judgment.
+ReqCheck is an automated requirements review assistant. Its findings are advisory and should be evaluated by qualified reviewers before being used for development or business decisions.
