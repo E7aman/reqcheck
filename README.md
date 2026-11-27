@@ -140,6 +140,8 @@ AI-generated findings are checked against source evidence. Unsupported quotation
 
 JSON output is available through the optional `--json` argument.
 
+A sample AI-generated report is available in [`examples/sample_report.md`](examples/sample_report.md) with the structured output in [`examples/sample_result.json`](examples/sample_result.json).
+
 ## Testing
 
 Run the automated test suite from the repository root:
