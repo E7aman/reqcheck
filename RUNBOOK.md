@@ -7,7 +7,7 @@
 
 ## 2. Установка
 ```bash
-cd reqcheck
+cd reqcheck                        # корень репозитория
 python -m venv .venv
 source .venv/bin/activate          # Windows (cmd): .venv\Scripts\activate
 pip install -r requirements.txt
@@ -51,7 +51,7 @@ python -m validator tests/fixtures/requirements.md out/report.md
 ```bash
 python -m unittest discover -s tests -t . -v
 ```
-Ожидается: `Ran 45 tests ... OK`. Ключ и интернет не нужны: модель в тестах подставная.
+Ожидается: `Ran 54 tests ... OK`. Ключ и интернет не нужны: модель в тестах подставная.
 
 Что покрыто: чтение md/PDF/DOCX и поиск цитат, структурные проверки (в том числе на ложные срабатывания), весь конвейер на подставной модели (отсев выдуманных цитат, самопроверка, матрица покрытия, структура отчёта), повторы и разбор JSON, CLI.
 

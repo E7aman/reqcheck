@@ -233,7 +233,9 @@ class Pipeline:
         if not self.llm:
             top = [f for f in self.res.findings][:5]
         # вывод «можно начинать» возможен только после полного анализа; при пропущенных этапах crit == 0 ничего не значит
-        complete = bool(self.llm) and not self.stats["failed_stages"]
+        unchecked = len(self.stats["unchecked"])
+        # найденный критичный дефект запрещает старт, а «да» требует, чтобы проверены были все требования
+        complete = bool(self.llm) and not self.stats["failed_stages"] and (crit > 0 or not unchecked)
         s = {"can_start": (crit == 0) if complete else None, "verdict": "", "priorities": []}
         if complete and top:
             r = self._call("итог", prompts.summary(
@@ -241,11 +243,15 @@ class Pipeline:
                 {"требований": len([i for i in self.res.items if i.kind != "acceptance"]), "замечаний": c},
                 [{"id": f.fid, "severity": f.severity, "problem": f.problem[:200]} for f in top]))
             if isinstance(r, dict):
-                s["verdict"] = _str(r.get("verdict"))
+                # без критичных дефектов текст модели может противоречить выводу «да», поэтому берём шаблонный
+                s["verdict"] = _str(r.get("verdict")) if crit else ""
                 s["priorities"] = [p.strip() for p in _list(r.get("priorities")) if isinstance(p, str) and p.strip()][:6]
         if not self.llm:
             s["verdict"] = ("Режим без LLM: выполнены только структурные проверки. Смысловой анализ (противоречия, "
                             "пропуски, качество формулировок) не проводился, вывод о готовности к разработке не делается.")
+        elif not complete and not self.stats["failed_stages"]:
+            s["verdict"] = (f"Анализ неполный: модель не вернула результат по требованиям ({unchecked} шт.). "
+                            "Вывод о готовности к разработке не делается.")
         elif not complete:
             s["verdict"] = ("Анализ неполный: не выполнены этапы (" + ", ".join(self.stats["failed_stages"]) + "). "
                             "Вывод о готовности к разработке не делается; повторите прогон, когда модель будет доступна.")

@@ -1,7 +1,7 @@
 import os
 from pathlib import Path
 
-DEFAULT_MODEL = "gemini-3.8-flash"   # имя из подсказки API; актуальные модели и лимиты смотрите в Google AI Studio, меняется через GEMINI_MODEL
+DEFAULT_MODEL = "gemini-3.8-flash,gemini-3.5-flash-lite,gemini-3.1-flash-lite"   # имя из подсказки API; актуальные модели и лимиты смотрите в Google AI Studio, меняется через GEMINI_MODEL
 
 
 def load_env(path: str = ".env") -> None:

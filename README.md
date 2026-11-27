@@ -72,7 +72,7 @@ Activate the environment (Windows PowerShell):
 Install packages:
 
 ```bash
-pip install -r reqcheck/requirements.txt
+pip install -r requirements.txt
 ```
 
 ## Configuration
@@ -95,13 +95,13 @@ Run commands from the repository root.
 ### AI-assisted analysis
 
 ```bash
-python -m validator reqcheck/examples/defective_requirements.md out/report.md --json out/result.json
+python -m validator tests/fixtures/requirements.md out/report.md --json out/result.json
 ```
 
 ### Rule-based mode (no API key required)
 
 ```bash
-python -m validator reqcheck/examples/defective_requirements.md out/report.md --lint-only
+python -m validator tests/fixtures/requirements.md out/report.md --lint-only
 ```
 
 ### Help
@@ -136,14 +136,7 @@ python -m unittest discover -v
 
 ## Documentation
 
-Additional project documentation is located in `reqcheck/`:
-
-- [Demo walkthrough](reqcheck/DEMO.md)
-- [Testing guide](reqcheck/TESTING.md)
-- [Submission checklist](reqcheck/SUBMISSION_CHECKLIST.md)
-- [Russian runbook](reqcheck/docs/RUNBOOK_RU.md)
-- [Architecture](reqcheck/docs/ARCHITECTURE.md)
-- [Presentation plan](reqcheck/docs/PRESENTATION_PLAN.md)
+- [Russian runbook](RUNBOOK.md): setup, quota limits, testing, evaluation, troubleshooting
 
 ## Disclaimer
 
